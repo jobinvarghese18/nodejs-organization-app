@@ -6,8 +6,8 @@ const passport = require("./middleware/passport.local");
 const session = require("express-session");
 const app = express();
 dotenv.config();
-
 const port = process.env.PORT || 3000;
+
 app.use(
   session({
     secret: process.env.PASSPORT_SECRET,
