@@ -25,7 +25,7 @@ signUp = async (req, res) => {
         .send({ error: true, message: "Organization does not exist" });
     }
 
-    const newUser = await User.create({
+    await User.create({
       username,
       password,
       role,
