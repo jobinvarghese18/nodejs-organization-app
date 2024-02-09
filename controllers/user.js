@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const jwt = require("jsonwebtoken");
 const Organization = require("../models/organization");
 const mongoose = require("mongoose");
 
@@ -30,11 +31,24 @@ signUp = async (req, res) => {
       role,
       organization,
     });
-    res.status(201).json(newUser);
+    res.status(201).json({ message: "User added successfully" });
   } catch (error) {
     console.error("Error creating user:", error);
-    res.send({ error: true, message: "Internal server error" });
+    res.status(500).send({ error: true, message: "Internal server error" });
   }
 };
 
-module.exports = { signUp };
+const singIn = async (req, res) => {
+  try {
+    const { username } = req.body;
+    const user = await User.findOne({ username });
+    console.log(user);
+    const token = await jwt.sign({ user }, process.env.JWT_SECRET);
+    res.status(200).json({ data: { access_token: token } });
+  } catch (error) {
+    console.error("Error creating user:", error);
+    res.status(500).send({ error: true, message: "Internal server error" });
+  }
+};
+
+module.exports = { signUp, singIn };
