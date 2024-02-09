@@ -3,9 +3,18 @@ const jwt = require("jsonwebtoken");
 const Organization = require("../models/organization");
 const mongoose = require("mongoose");
 
+const findUser = async (req, res) => {
+  try {
+    const results = await User.find().select("-password");
+    return res.status(200).send({ data: [...results] });
+  } catch (error) {
+    console.error("Error creating user:", error);
+    res.status(500).send({ error: true, message: "Internal server error" });
+  }
+};
+
 signUp = async (req, res) => {
   const { username, password, role, organization } = req.body;
-
   try {
     if (!mongoose.Types.ObjectId.isValid(organization)) {
       return res
@@ -51,4 +60,4 @@ const singIn = async (req, res) => {
   }
 };
 
-module.exports = { signUp, singIn };
+module.exports = { findUser, signUp, singIn };
