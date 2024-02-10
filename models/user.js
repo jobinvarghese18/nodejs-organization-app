@@ -1,10 +1,8 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const Roles = ["admin", "user"];
+const { setPassword } = require("../helpers");
 
-const setPassword = (password) => {
-  return bcrypt.hashSync(password, 10);
-};
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true, set: setPassword },

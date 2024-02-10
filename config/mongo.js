@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const uri = process.env.MONGO_URI;
 const state = { client: null };
 
 exports.connect = async () => {
