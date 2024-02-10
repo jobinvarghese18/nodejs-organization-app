@@ -53,7 +53,6 @@ const singIn = async (req, res) => {
   try {
     const { username } = req.body;
     const user = await User.findOne({ username });
-    console.log(user);
     const token = await jwt.sign({ user }, process.env.JWT_SECRET);
     res.status(200).json({ data: { access_token: token } });
   } catch (error) {
