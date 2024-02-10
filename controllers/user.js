@@ -5,7 +5,9 @@ const mongoose = require("mongoose");
 
 const findUser = async (req, res) => {
   try {
-    const results = await User.find().select("-password");
+    const results = await User.find()
+      .select("-password")
+      .populate("organization");
     return res.status(200).send({ data: [...results] });
   } catch (error) {
     console.error("Error creating user:", error);
