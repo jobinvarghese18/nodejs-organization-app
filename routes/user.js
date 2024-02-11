@@ -4,6 +4,7 @@ const validator = require("express-joi-validation").createValidator({});
 const {
   signUp,
   singIn,
+  removeUser,
   findUser,
   signUpBodySchema,
   signInBodySChema,
@@ -20,6 +21,7 @@ router.post(
   passport.authenticate("local"),
   singIn
 );
+router.delete("/", authenticateJwt, roleGuard("admin"), removeUser);
 router.get("/sign", authenticateJwt, roleGuard("admin"), (req, res) => {
   res.send({ message: "Authorized" });
 });

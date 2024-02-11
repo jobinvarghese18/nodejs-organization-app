@@ -79,10 +79,25 @@ const singIn = async (req, res) => {
   }
 };
 
+const removeUser = async (req, res) => {
+  try {
+    const id = mongoose.Types.ObjectId(req.params.id);
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).send({ error: true, message: "Invalid user ID" });
+    }
+    await User.findByIdAndDelete(id);
+    return res.status(200).send({ message: "User data deleted" });
+  } catch (error) {
+    console.error("Error creating user:", error);
+    res.status(500).send({ error: true, message: "Internal server error" });
+  }
+};
+
 module.exports = {
   findUser,
   signUp,
   singIn,
   signUpBodySchema,
   signInBodySChema,
+  removeUser,
 };
