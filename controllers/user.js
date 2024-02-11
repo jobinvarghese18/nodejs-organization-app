@@ -1,13 +1,32 @@
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
-const Organization = require("../models/organization");
 const mongoose = require("mongoose");
+const Joi = require("joi");
+const Organization = require("../models/organization");
+
+const signUpBodySchema = Joi.object({
+  username: Joi.string().required().description("User name"),
+  role: Joi.string().required().description("User role"),
+  organization: Joi.string().required().description("Organization of user"),
+  password: Joi.string().required().description("User login password"),
+});
+
+const signInBodySChema = Joi.object({
+  username: Joi.string().required().description("User name"),
+  password: Joi.string().required().description("User login password"),
+});
 
 const findUser = async (req, res) => {
   try {
-    const results = await User.find()
-      .select("-password")
-      .populate("organization");
+    let results;
+    if (req.user.role === "admin") {
+      results = await User.find().select("-password").populate("organization");
+    } else {
+      results = await User.find({ _id: req.user.id })
+        .select("-password")
+        .populate("organization");
+    }
+
     return res.status(200).send({ data: [...results] });
   } catch (error) {
     console.error("Error creating user:", error);
@@ -61,4 +80,10 @@ const singIn = async (req, res) => {
   }
 };
 
-module.exports = { findUser, signUp, singIn };
+module.exports = {
+  findUser,
+  signUp,
+  singIn,
+  signUpBodySchema,
+  signInBodySChema,
+};

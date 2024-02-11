@@ -1,4 +1,14 @@
 const Organization = require("../models/organization");
+const Joi = require("joi");
+const mongoose = require("mongoose");
+const createOrganizationSchema = Joi.object({
+  name: Joi.string().required().description("Organization name"),
+  address: Joi.string().required().description("Organization address"),
+});
+
+const updateOrganizationParams = Joi.object({
+  id: Joi.string().required().description("Organization id"),
+});
 
 const findOrganization = async (req, res) => {
   try {
@@ -34,6 +44,11 @@ const createOrganization = async (req, res) => {
 const updateOrganization = async (req, res) => {
   try {
     const id = req.params.id;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res
+        .status(400)
+        .send({ error: true, message: "Invalid organization ID" });
+    }
     const { name, address } = req.body;
     const result = await Organization.findByIdAndUpdate(
       id,
@@ -54,7 +69,12 @@ const updateOrganization = async (req, res) => {
 
 const removeOrganization = async (req, res) => {
   try {
-    const id = req.params.id;
+    const id = mongoose.Types.ObjectId(req.params.id);
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res
+        .status(400)
+        .send({ error: true, message: "Invalid organization ID" });
+    }
     await Organization.findByIdAndDelete(id);
     return res.status(200).send({ message: "Organization data deleted" });
   } catch (error) {
@@ -70,4 +90,6 @@ module.exports = {
   createOrganization,
   updateOrganization,
   removeOrganization,
+  createOrganizationSchema,
+  updateOrganizationParams,
 };
