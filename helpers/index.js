@@ -17,6 +17,13 @@ const generateFakeUsers = (count) => {
     };
     users.push(user);
   }
+
+  users.push({
+    username: "admin",
+    role: "admin",
+    organization: "65c53ab9b555c6a0535f2ad7",
+    password: setPassword("password"),
+  });
   //   console.log("Users >>>", users);
   return users;
 };
