@@ -6,7 +6,6 @@ const Organization = require("../models/organization");
 
 const signUpBodySchema = Joi.object({
   username: Joi.string().required().description("User name"),
-  role: Joi.string().required().description("User role"),
   organization: Joi.string().required().description("Organization of user"),
   password: Joi.string().required().description("User login password"),
 });
